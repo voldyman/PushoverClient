@@ -14,6 +14,9 @@ currently using libcurl for network communication and json++ is present in the r
 
 - [x] ~~Get message from Commandline~~
 - [x] ~~Parse Commandline arguments~~
+- [ ] User better argument parsing mechanism
+- [ ] Allow storing user keys on disk
+- [ ] Add option to send message to User whoose key is already stored
 - [ ] Store application key on disk (???)
 
 ...
