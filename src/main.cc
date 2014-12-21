@@ -1,4 +1,5 @@
 #include <iostream>
+#include <getopt.h>
 
 #include "json.hh"
 #include "curl_easy.h"
@@ -7,16 +8,9 @@
 using curl::curl_easy;
 using curl::curl_form;
 
-int main(int argc, char *argv[])
+void PushToDevice(string token, string message, string user)
 {
-
-  // enter your api token here
-  const string token = "";
-
-  // enter user id here
-  const string user = "";
-  const string message = "test message from cli";
-
+  
   string msg = "token="+token+"&user="+user+"&message="+message;
 
   curl_easy easy;
@@ -38,5 +32,56 @@ int main(int argc, char *argv[])
     error.print_traceback();
     // Note that the printing the stack will erase it
   }
+}
+
+void ShowHelp()
+{
+  std::cout << "Doh !!" << std::endl;
+}
+
+int main(int argc, char *argv[])
+{
+  static struct option long_options[] = {
+    {"token",   required_argument, 0, 't'},
+    {"message", required_argument, 0, 'm'},
+    {"user",    required_argument, 0, 'u'},
+    {"help",    optional_argument, 0, 'h'},
+    {0,0,0,0}
+  };
+
+  string token, message, user;
+  
+  int current_opt;
+  int opt_index;
+  while((current_opt = getopt_long(argc, argv, "ht:m:u:", long_options, &opt_index)) > 0)
+  {
+    switch(current_opt) {
+    case 't':
+      token = optarg;
+      break;
+
+    case 'm':
+      message = optarg;
+      break;
+
+    case 'u':
+      user = optarg;
+      break;
+
+    case 'h':
+      ShowHelp();
+      return 0;
+    }
+  }
+
+  if (token.length() <= 0 || message.length() <= 0 ||
+      user.length() <= 0) {
+
+    ShowHelp();
+    return 0;
+  }
+
+  PushToDevice(token, message, user);
+
   return 0;
 }
