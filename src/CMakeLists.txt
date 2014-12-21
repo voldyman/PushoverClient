@@ -1,6 +1,6 @@
 
 # enable c++11
-ADD_DEFINITIONS(-std=c++11)
+add_definitions(-std=c++11)
 
 include_directories(.)
 

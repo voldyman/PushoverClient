@@ -1,6 +1,7 @@
 #include <iostream>
 #include <getopt.h>
 
+#include "config.h"
 #include "json.hh"
 #include "curl_easy.h"
 #include "curl_form.h"
@@ -8,11 +9,17 @@
 using curl::curl_easy;
 using curl::curl_form;
 
-void PushToDevice(string token, string message, string user)
+string GetHomeDir();
+
+void PushToDevice(string token, string message, string user, string title="")
 {
   
   string msg = "token="+token+"&user="+user+"&message="+message;
 
+  if (title.length() > 0) {
+    msg += "&title="+title;
+  }
+  
   curl_easy easy;
 
   curl_pair<CURLoption,string> url_opt(CURLOPT_URL, "https://api.pushover.net/1/messages.json");
@@ -45,15 +52,20 @@ int main(int argc, char *argv[])
     {"token",   required_argument, 0, 't'},
     {"message", required_argument, 0, 'm'},
     {"user",    required_argument, 0, 'u'},
+    {"title",   optional_argument, 0, 'i'},
     {"help",    optional_argument, 0, 'h'},
     {0,0,0,0}
   };
 
+  //required fields
   string token, message, user;
+
+  //options fields
+  string title;
   
   int current_opt;
   int opt_index;
-  while((current_opt = getopt_long(argc, argv, "ht:m:u:", long_options, &opt_index)) > 0)
+  while((current_opt = getopt_long(argc, argv, "ht:m:u:i:", long_options, &opt_index)) > 0)
   {
     switch(current_opt) {
     case 't':
@@ -68,12 +80,15 @@ int main(int argc, char *argv[])
       user = optarg;
       break;
 
+    case 'i':
+      title = optarg;
+      break;
+
     case 'h':
       ShowHelp();
       return 0;
     }
   }
-
   if (token.length() <= 0 || message.length() <= 0 ||
       user.length() <= 0) {
 
@@ -81,7 +96,8 @@ int main(int argc, char *argv[])
     return 0;
   }
 
-  PushToDevice(token, message, user);
+
+  PushToDevice(token, message, user, title);
 
   return 0;
 }
