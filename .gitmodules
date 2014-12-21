@@ -1,0 +1,6 @@
+[submodule "curlcpp"]
+	path = curlcpp
+	url = https://github.com/JosephP91/curlcpp
+[submodule "json"]
+	path = json
+	url = https://github.com/tunnuz/json
