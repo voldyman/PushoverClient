@@ -12,7 +12,8 @@ currently using libcurl for network communication and json++ is present in the r
 
 ##TODO
 
-- [ ] Add message from Commandline
-- [ ] Store application key on disk
+- [x] ~~Get message from Commandline~~
+- [x] ~~Parse Commandline arguments~~
+- [ ] Store application key on disk (???)
 
 ...
