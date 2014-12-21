@@ -2,22 +2,34 @@
 
 #include "json.hh"
 #include "curl_easy.h"
+#include "curl_form.h"
 
 using curl::curl_easy;
+using curl::curl_form;
 
 int main(int argc, char *argv[])
 {
-  JSON::Object obj;
-  obj["foo"] = "bar";
-  obj["bar"] = "baz";
-  obj["Num"] = 2;
 
-  std::cout << "Hello World" << std::endl;
-  std::cout << "Json: " << obj << std::endl;
+  // enter your api token here
+  const string token = "";
+
+  // enter user id here
+  const string user = "";
+  const string message = "test message from cli";
+
+  string msg = "token="+token+"&user="+user+"&message="+message;
+
   curl_easy easy;
-  easy.add(curl_pair<CURLoption,string>(CURLOPT_URL,"http://aura.tripent.net") );
-  easy.add(curl_pair<CURLoption,long>(CURLOPT_FOLLOWLOCATION,1L));
+
+  curl_pair<CURLoption,string> url_opt(CURLOPT_URL, "https://api.pushover.net/1/messages.json");
+
   try {
+    easy.add(url_opt);
+
+    easy.add(curl_pair<CURLoption,bool>(CURLOPT_SSL_VERIFYPEER,false));
+    easy.add(curl_pair<CURLoption,long>(CURLOPT_FOLLOWLOCATION,1L));
+    easy.add(curl_pair<CURLoption, string>(CURLOPT_POSTFIELDS, msg));
+
     easy.perform();
   } catch (curl_easy_exception error) {
     // If you want to get the entire error stack we can do:
